@@ -5,102 +5,88 @@ const iaButton = document.getElementById('iaButton');
 const iaPergunta = document.getElementById('iaPergunta');
 const iaResposta = document.getElementById('iaResposta');
 
-const openaiAPIKey = "YOUR_OPENAI_KEY"; // substitui pela tua
+// Base de receitas offline
+const receitasBase = {
+  frango: [
+    {nome:"Frango Salteado com Arroz", ingredientes:["Frango:200g","Arroz:100g","Cenoura:1","Courgette:1/2","Pimento:1/2"], passos:["Cozer arroz","Saltear frango","Saltear legumes","Misturar tudo","Servir"]},
+    {nome:"Frango Assado com Batata", ingredientes:["Frango:200g","Batata:150g","Alho:2 dentes","Azeite:1c.sopa"], passos:["Temperar frango","Assar com batata","Servir"]}
+  ],
+  porco: [
+    {nome:"Lombo de Porco Grelhado", ingredientes:["Porco:200g","Arroz:100g","Brócolos:100g"], passos:["Temperar lombo","Grelhar lombo","Cozinhar arroz","Saltear brócolos","Servir"]}
+  ],
+  vaca: [
+    {nome:"Carne de Vaca com Legumes", ingredientes:["Vaca:200g","Arroz:100g","Cenoura:1","Pimento:1"], passos:["Saltear carne","Cozinhar arroz","Saltear legumes","Servir"]}
+  ],
+  ovos: [
+    {nome:"Omelete de Legumes", ingredientes:["Ovos:3","Cebola:1/2","Pimento:1/2","Courgette:1/2"], passos:["Bater ovos","Saltear legumes","Fritar omelete","Servir"]}
+  ],
+  leguminosas: [
+    {nome:"Grão com Legumes", ingredientes:["Grão:150g","Cenoura:1","Couve:50g","Azeite:1c.sopa"], passos:["Cozinhar grão","Saltear legumes","Misturar","Servir"]}
+  ]
+};
 
-async function gerarMenus() {
-  const proteina = document.getElementById('proteina').value;
-  const evitar = document.getElementById('evitar').value.split(',').map(i => i.trim());
-
-  menusContainer.innerHTML = `<p>Gerando menus...</p>`;
-  comprasContainer.innerHTML = ``;
+function gerarMenus() {
+  const proteinaInicial = document.getElementById('proteina').value;
+  const evitar = document.getElementById('evitar').value.split(',').map(i=>i.trim().toLowerCase());
+  menusContainer.innerHTML = '';
+  comprasContainer.innerHTML = '';
 
   const menus = [];
   const compras = {};
 
   for(let dia=1; dia<=6; dia++){
-    const prompt = `
-    Cria uma receita prática para meal prep do dia ${dia}, proteína principal: ${proteina}, evitando: ${evitar.join(', ')}.
-    Ingredientes + quantidades + passos simples.
-    Apto micro-ondas e frigorífico por 3 dias.
-    Formata assim:
-    Ingredientes:
-    - nome: quantidade
-    Passos:
-    1. ...
-    `;
-    
-    try {
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${openaiAPIKey}`
-        },
-        body: JSON.stringify({
-          model: "gpt-4",
-          messages: [{role:"user", content: prompt}],
-          max_tokens: 500
-        })
-      });
-      const data = await response.json();
-      const receita = data.choices[0].message.content;
-      menus.push({dia, receita});
+    const proteinasDisponiveis = Object.keys(receitasBase).filter(p => !evitar.includes(p));
+    const proteinaDia = proteinasDisponiveis[(dia-1) % proteinasDisponiveis.length];
+    const receitaLista = receitasBase[proteinaDia];
+    const receita = receitaLista[Math.floor(Math.random()*receitaLista.length)];
 
-      // Extrair lista de compras
-      receita.split('\n').forEach(linha=>{
-        if(linha.includes(':')){
-          const [ingrediente, quant] = linha.split(':');
-          if(!compras[ingrediente]) compras[ingrediente] = quant.trim();
-        }
-      });
+    menus.push({dia, receita});
 
-    } catch(err){
-      console.error(err);
-      menus.push({dia, receita: "Erro a gerar receita"});
-    }
+    // Lista de compras agregada
+    receita.ingredientes.forEach(ing => {
+      const [nome, quant] = ing.split(':');
+      if(!compras[nome]) compras[nome] = quant;
+    });
   }
 
-  // Mostrar menus
-  menusContainer.innerHTML = `<h2 class="text-2xl font-semibold mb-2">Menus 6 Dias</h2>`;
+  // Mostrar menus em cards
   menus.forEach(menu=>{
-    const pre = document.createElement('pre');
-    pre.textContent = menu.receita;
-    menusContainer.appendChild(pre);
+    const card = document.createElement('div');
+    card.classList.add('menu-card');
+
+    card.innerHTML = `<h3 class="font-bold text-lg mb-2">Dia ${menu.dia}: ${menu.receita.nome}</h3>
+                      <strong>Ingredientes:</strong>
+                      <pre>${menu.receita.ingredientes.join('\n')}</pre>
+                      <strong>Passos:</strong>
+                      <pre>${menu.receita.passos.map((p,i)=>`${i+1}. ${p}`).join('\n')}</pre>`;
+    menusContainer.appendChild(card);
   });
 
   // Mostrar lista de compras
   comprasContainer.innerHTML = `<h2 class="text-2xl font-semibold mb-2">Lista de Compras Agregada</h2><pre>${Object.entries(compras).map(([i,q])=>`${i}: ${q}`).join('\n')}</pre>`;
 }
 
-// Assistente IA
-async function perguntarIA() {
-  const pergunta = iaPergunta.value;
+// Assistente Offline avançado
+function perguntarIA() {
+  const pergunta = iaPergunta.value.toLowerCase();
   if(!pergunta) return;
-  iaResposta.textContent = "A processar...";
 
-  const prompt = `Responde à seguinte pergunta sobre receitas, substituições, tempos ou conservação de alimentos:\n${pergunta}`;
+  let resposta = "Desculpa, não sei responder a isso. Sugiro ajustar os ingredientes conforme preferência.";
 
-  try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${openaiAPIKey}`
-      },
-      body: JSON.stringify({
-        model: "gpt-4",
-        messages: [{role:"user", content: prompt}],
-        max_tokens: 300
-      })
-    });
-    const data = await response.json();
-    const resposta = data.choices[0].message.content;
-    iaResposta.textContent = resposta;
+  const palavrasChave = ["substituir", "alternativa", "trocar"];
+  const conservacao = ["conservação", "guardar", "armazenamento"];
+  const tempo = ["tempo", "preparação", "duração"];
 
-  } catch(err){
-    console.error(err);
-    iaResposta.textContent = "Erro a processar a pergunta.";
+  if(palavrasChave.some(p=>pergunta.includes(p))){
+    resposta = "Para substituir proteínas, pode usar frango, porco, vaca, ovos ou leguminosas, dependendo da receita.";
+  } else if(conservacao.some(p=>pergunta.includes(p))){
+    resposta = "As refeições podem ser guardadas no frigorífico até 3 dias e aquecidas no micro-ondas antes de consumir.";
+  } else if(tempo.some(p=>pergunta.includes(p))){
+    resposta = "A preparação média de cada receita é entre 20 a 40 minutos, dependendo da proteína.";
+
   }
+
+  iaResposta.textContent = resposta;
 }
 
 gerarMenusButton.addEventListener('click', gerarMenus);
