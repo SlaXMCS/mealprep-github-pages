@@ -3,20 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meal Prep Planner Offline</title>
+<title>Meal Prep Planner 2026</title>
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-r from-green-100 to-white text-gray-900">
+<body class="relative overflow-x-hidden">
 
-<div class="container mx-auto p-6">
-  <h1 class="text-4xl font-extrabold text-center mb-8">Meal Prep Planner - Ciclo 6 Dias</h1>
+<!-- Fundo animado -->
+<div id="background"></div>
 
-  <div id="controls" class="bg-white rounded shadow p-6 mb-6 flex flex-col md:flex-row gap-4">
+<div class="container mx-auto p-6 relative z-10">
+  <h1 class="text-5xl font-extrabold text-center mb-8 text-gradient">Meal Prep Planner 2026</h1>
+
+  <div id="controls" class="bg-white/90 backdrop-blur-md rounded-xl shadow-lg p-6 mb-6 flex flex-col md:flex-row gap-4">
     <div class="flex-1">
-      <label class="block mb-2">
+      <label class="block mb-3">
         Proteína inicial preferida:
-        <select id="proteina" class="border rounded px-2 py-1 w-full mt-1">
+        <select id="proteina" class="border rounded px-3 py-2 w-full mt-1">
           <option value="frango">Frango</option>
           <option value="porco">Porco</option>
           <option value="vaca">Vaca</option>
@@ -24,31 +27,36 @@
           <option value="leguminosas">Leguminosas</option>
         </select>
       </label>
-      <label class="block mb-2">
+      <label class="block mb-3">
         Evitar ingredientes (vírgula separado):
-        <input type="text" id="evitar" class="border rounded px-2 py-1 w-full mt-1" placeholder="Ex: peixe, marisco"/>
+        <input type="text" id="evitar" class="border rounded px-3 py-2 w-full mt-1" placeholder="Ex: peixe, marisco"/>
       </label>
     </div>
-    <button id="gerarMenus" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded w-full md:w-48 self-end transition-all duration-200 transform hover:scale-105">Gerar Menus 6 Dias</button>
+    <button id="gerarMenus" class="bg-gradient-to-r from-green-400 to-blue-400 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:scale-105 transition-all duration-300">Gerar Menus 6 Dias</button>
   </div>
 
-  <div id="filtros" class="flex gap-2 mb-4">
-    <button data-proteina="todas" class="filter-btn bg-gray-200 rounded px-3 py-1 hover:bg-gray-300 transition">Todas</button>
-    <button data-proteina="frango" class="filter-btn bg-yellow-200 rounded px-3 py-1 hover:bg-yellow-300 transition">Frango</button>
-    <button data-proteina="porco" class="filter-btn bg-red-200 rounded px-3 py-1 hover:bg-red-300 transition">Porco</button>
-    <button data-proteina="vaca" class="filter-btn bg-purple-200 rounded px-3 py-1 hover:bg-purple-300 transition">Vaca</button>
-    <button data-proteina="ovos" class="filter-btn bg-orange-200 rounded px-3 py-1 hover:bg-orange-300 transition">Ovos</button>
-    <button data-proteina="leguminosas" class="filter-btn bg-green-200 rounded px-3 py-1 hover:bg-green-300 transition">Leguminosas</button>
+  <!-- Filtros de Proteínas -->
+  <div id="filtros" class="flex flex-wrap gap-2 mb-6">
+    <button data-proteina="todas" class="filter-btn px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 transition">Todas</button>
+    <button data-proteina="frango" class="filter-btn px-4 py-2 rounded-full bg-yellow-200 hover:bg-yellow-300 transition">Frango</button>
+    <button data-proteina="porco" class="filter-btn px-4 py-2 rounded-full bg-red-200 hover:bg-red-300 transition">Porco</button>
+    <button data-proteina="vaca" class="filter-btn px-4 py-2 rounded-full bg-purple-200 hover:bg-purple-300 transition">Vaca</button>
+    <button data-proteina="ovos" class="filter-btn px-4 py-2 rounded-full bg-orange-200 hover:bg-orange-300 transition">Ovos</button>
+    <button data-proteina="leguminosas" class="filter-btn px-4 py-2 rounded-full bg-green-200 hover:bg-green-300 transition">Leguminosas</button>
   </div>
 
-  <div id="menusContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"></div>
-  <div id="comprasContainer" class="mb-6"></div>
+  <!-- Menus -->
+  <div id="menusContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6"></div>
 
-  <div id="assistenteContainer" class="bg-white rounded shadow p-6">
-    <h2 class="text-2xl font-semibold mb-4">Assistente Offline</h2>
-    <input type="text" id="iaPergunta" placeholder="Pergunta ao assistente..." class="border rounded px-2 py-1 w-full mb-2"/>
-    <button id="iaButton" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded w-full mb-2 transition-all duration-200 transform hover:scale-105">Perguntar</button>
-    <pre id="iaResposta" class="whitespace-pre-wrap bg-gray-50 p-3 rounded"></pre>
+  <!-- Lista de compras -->
+  <div id="comprasContainer" class="mb-6 bg-white/90 backdrop-blur-md rounded-xl shadow-lg p-6"></div>
+
+  <!-- Assistente / Calculadora -->
+  <div id="assistenteContainer" class="bg-white/90 backdrop-blur-md rounded-xl shadow-lg p-6">
+    <h2 class="text-2xl font-semibold mb-4">Assistente / Calculadora de Porções</h2>
+    <input type="text" id="iaPergunta" placeholder="Ex: dobrar receita ou para 3 pessoas" class="border rounded px-3 py-2 w-full mb-3"/>
+    <button id="iaButton" class="bg-gradient-to-r from-blue-400 to-purple-400 text-white px-4 py-2 rounded-xl w-full mb-3 hover:scale-105 transition-all duration-300">Calcular</button>
+    <pre id="iaResposta" class="whitespace-pre-wrap bg-gray-50 p-4 rounded-xl shadow-inner"></pre>
   </div>
 </div>
 
