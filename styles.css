@@ -6,15 +6,24 @@ h1, h2 {
   font-family: 'Poppins', sans-serif;
 }
 
-#menusContainer pre, #comprasContainer pre {
-  background-color: #f0fdf4; /* verde suave */
+.menu-card {
+  background-color: #f0fdf4;
   padding: 1rem;
-  border-radius: 0.5rem;
-  margin-bottom: 1rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.menu-card:hover {
+  transform: translateY(-5px);
+}
+
+#menusContainer pre {
   white-space: pre-wrap;
 }
 
-#menusContainer h2, #comprasContainer h2 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+#comprasContainer pre {
+  background-color: #d1fae5;
+  padding: 1rem;
+  border-radius: 0.5rem;
 }
