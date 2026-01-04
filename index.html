@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meal Prep IA - Ciclo 6 dias</title>
+<title>Meal Prep Offline Avançado</title>
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gradient-to-r from-green-100 to-white text-gray-900">
 
 <div class="container mx-auto p-6">
-  <h1 class="text-4xl font-extrabold text-center mb-8">Meal Prep IA - Ciclo 6 dias</h1>
+  <h1 class="text-4xl font-extrabold text-center mb-8">Meal Prep Offline - Ciclo 6 Dias</h1>
 
   <div id="controls" class="bg-white rounded shadow p-6 mb-6">
     <label class="block mb-4">
@@ -27,16 +27,16 @@
       Evitar ingredientes (vírgula separado):
       <input type="text" id="evitar" class="border rounded px-2 py-1 w-full mt-1" placeholder="Ex: peixe, marisco"/>
     </label>
-    <button id="gerarMenus" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded w-full">Gerar Menus 6 dias</button>
+    <button id="gerarMenus" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded w-full transition-all duration-200 transform hover:scale-105">Gerar Menus 6 Dias</button>
   </div>
 
-  <div id="menusContainer" class="mb-6"></div>
+  <div id="menusContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"></div>
   <div id="comprasContainer" class="mb-6"></div>
 
   <div id="assistenteContainer" class="bg-white rounded shadow p-6">
-    <h2 class="text-2xl font-semibold mb-4">Assistente IA</h2>
-    <input type="text" id="iaPergunta" placeholder="Pergunta à IA..." class="border rounded px-2 py-1 w-full mb-2"/>
-    <button id="iaButton" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded w-full mb-2">Perguntar</button>
+    <h2 class="text-2xl font-semibold mb-4">Assistente Offline</h2>
+    <input type="text" id="iaPergunta" placeholder="Pergunta ao assistente..." class="border rounded px-2 py-1 w-full mb-2"/>
+    <button id="iaButton" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded w-full mb-2 transition-all duration-200 transform hover:scale-105">Perguntar</button>
     <pre id="iaResposta" class="whitespace-pre-wrap bg-gray-50 p-3 rounded"></pre>
   </div>
 </div>
