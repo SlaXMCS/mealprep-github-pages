@@ -12,10 +12,16 @@ h1, h2 {
   border-radius: 0.75rem;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   transition: transform 0.2s;
+  cursor: pointer;
 }
 
 .menu-card:hover {
   transform: translateY(-5px);
+}
+
+.menu-card.done {
+  opacity: 0.6;
+  text-decoration: line-through;
 }
 
 #menusContainer pre {
@@ -26,4 +32,8 @@ h1, h2 {
   background-color: #d1fae5;
   padding: 1rem;
   border-radius: 0.5rem;
+}
+
+.filter-btn.active {
+  border: 2px solid #111;
 }
