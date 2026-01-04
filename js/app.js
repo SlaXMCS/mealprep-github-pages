@@ -1,7 +1,6 @@
 let recipesData;
 let currentCiclo = 0;
 
-// Função async para carregar receitas
 async function loadRecipes() {
   try {
     const res = await fetch('./data/recipes.json');
@@ -16,7 +15,6 @@ async function loadRecipes() {
 
 loadRecipes();
 
-// Inicializar select de ciclos
 function initCicloSelect() {
   const select = document.getElementById('ciclo-select');
   recipesData.ciclos.forEach((c, i) => {
@@ -31,7 +29,6 @@ function initCicloSelect() {
   });
 }
 
-// Render menu do ciclo
 function renderMenu(index) {
   const menuDiv = document.getElementById('menu-days');
   menuDiv.innerHTML = '';
@@ -45,7 +42,6 @@ function renderMenu(index) {
   renderShoppingList(index);
 }
 
-// Render receita
 function renderRecipe(id, index) {
   const recipeDiv = document.getElementById('recipes-list');
   recipeDiv.innerHTML = '';
@@ -60,7 +56,6 @@ function renderRecipe(id, index) {
   }
 }
 
-// Lista de compras
 function renderShoppingList(index) {
   const list = document.getElementById('shopping-list');
   list.innerHTML = '';
@@ -74,7 +69,6 @@ function renderShoppingList(index) {
   });
 }
 
-// Chat IA
 document.getElementById('chat-send').addEventListener('click', async () => {
   const input = document.getElementById('chat-input').value.trim();
   if (!input) return;
