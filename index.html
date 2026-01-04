@@ -3,31 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meal Prep Offline Avançado</title>
+<title>Meal Prep Planner Offline</title>
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gradient-to-r from-green-100 to-white text-gray-900">
 
 <div class="container mx-auto p-6">
-  <h1 class="text-4xl font-extrabold text-center mb-8">Meal Prep Offline - Ciclo 6 Dias</h1>
+  <h1 class="text-4xl font-extrabold text-center mb-8">Meal Prep Planner - Ciclo 6 Dias</h1>
 
-  <div id="controls" class="bg-white rounded shadow p-6 mb-6">
-    <label class="block mb-4">
-      Proteína inicial preferida:
-      <select id="proteina" class="border rounded px-2 py-1 w-full mt-1">
-        <option value="frango">Frango</option>
-        <option value="porco">Porco</option>
-        <option value="vaca">Vaca</option>
-        <option value="ovos">Ovos</option>
-        <option value="leguminosas">Leguminosas</option>
-      </select>
-    </label>
-    <label class="block mb-4">
-      Evitar ingredientes (vírgula separado):
-      <input type="text" id="evitar" class="border rounded px-2 py-1 w-full mt-1" placeholder="Ex: peixe, marisco"/>
-    </label>
-    <button id="gerarMenus" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded w-full transition-all duration-200 transform hover:scale-105">Gerar Menus 6 Dias</button>
+  <div id="controls" class="bg-white rounded shadow p-6 mb-6 flex flex-col md:flex-row gap-4">
+    <div class="flex-1">
+      <label class="block mb-2">
+        Proteína inicial preferida:
+        <select id="proteina" class="border rounded px-2 py-1 w-full mt-1">
+          <option value="frango">Frango</option>
+          <option value="porco">Porco</option>
+          <option value="vaca">Vaca</option>
+          <option value="ovos">Ovos</option>
+          <option value="leguminosas">Leguminosas</option>
+        </select>
+      </label>
+      <label class="block mb-2">
+        Evitar ingredientes (vírgula separado):
+        <input type="text" id="evitar" class="border rounded px-2 py-1 w-full mt-1" placeholder="Ex: peixe, marisco"/>
+      </label>
+    </div>
+    <button id="gerarMenus" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded w-full md:w-48 self-end transition-all duration-200 transform hover:scale-105">Gerar Menus 6 Dias</button>
+  </div>
+
+  <div id="filtros" class="flex gap-2 mb-4">
+    <button data-proteina="todas" class="filter-btn bg-gray-200 rounded px-3 py-1 hover:bg-gray-300 transition">Todas</button>
+    <button data-proteina="frango" class="filter-btn bg-yellow-200 rounded px-3 py-1 hover:bg-yellow-300 transition">Frango</button>
+    <button data-proteina="porco" class="filter-btn bg-red-200 rounded px-3 py-1 hover:bg-red-300 transition">Porco</button>
+    <button data-proteina="vaca" class="filter-btn bg-purple-200 rounded px-3 py-1 hover:bg-purple-300 transition">Vaca</button>
+    <button data-proteina="ovos" class="filter-btn bg-orange-200 rounded px-3 py-1 hover:bg-orange-300 transition">Ovos</button>
+    <button data-proteina="leguminosas" class="filter-btn bg-green-200 rounded px-3 py-1 hover:bg-green-300 transition">Leguminosas</button>
   </div>
 
   <div id="menusContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"></div>
