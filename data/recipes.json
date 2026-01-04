@@ -1,0 +1,237 @@
+{
+  "ciclos": [
+    {
+      "nome": "Ciclo 1 – Mediterrânico",
+      "receitas": [
+        {
+          "id": "frango-forno-legumes",
+          "titulo": "Frango no forno com legumes",
+          "ingredientes": [
+            "1,2 kg de frango (coxas ou peito)",
+            "2 cenouras",
+            "1 courgette",
+            "1 cebola roxa",
+            "2 dentes de alho",
+            "Azeite, sal, pimenta, paprika"
+          ],
+          "passos": [
+            "Pré-aquecer o forno a 200ºC",
+            "Cortar os legumes em pedaços médios",
+            "Dispor frango e legumes num tabuleiro",
+            "Temperar com azeite, alho, sal, pimenta e paprika",
+            "Assar 45–50 min, virando a meio"
+          ]
+        },
+        {
+          "id": "vaca-cogumelos-arroz",
+          "titulo": "Vaca salteada com cogumelos e arroz",
+          "ingredientes": [
+            "800 g de vaca em tiras",
+            "250 g de cogumelos frescos",
+            "1 cebola",
+            "1 chávena de arroz",
+            "Azeite, sal, pimenta"
+          ],
+          "passos": [
+            "Cozer o arroz e reservar",
+            "Saltear a carne em azeite",
+            "Retirar a carne e reservar",
+            "Saltear cebola e cogumelos",
+            "Juntar carne e envolver"
+          ]
+        }
+      ]
+    },
+    {
+      "nome": "Ciclo 2 – Asiático",
+      "receitas": [
+        {
+          "id": "porco-agridoce-legumes",
+          "titulo": "Porco agridoce com legumes",
+          "ingredientes": [
+            "1 kg de lombo de porco em cubos",
+            "1 pimento vermelho",
+            "1 cenoura",
+            "1 cebola",
+            "3 colheres de sopa molho de soja",
+            "1 colher de sopa mel",
+            "Azeite"
+          ],
+          "passos": [
+            "Saltear o porco em azeite até dourar",
+            "Juntar legumes cortados finos",
+            "Adicionar molho de soja e mel",
+            "Cozinhar até reduzir o molho e envolver tudo"
+          ]
+        },
+        {
+          "id": "frango-brocolos",
+          "titulo": "Frango salteado com brócolos",
+          "ingredientes": [
+            "1 kg de peito de frango em tiras",
+            "1 brócolo pequeno",
+            "2 dentes de alho",
+            "2 colheres de sopa molho de soja",
+            "Azeite"
+          ],
+          "passos": [
+            "Saltear frango em azeite até dourar",
+            "Adicionar alho picado e brócolos",
+            "Juntar molho de soja e saltear mais 5 minutos"
+          ]
+        }
+      ]
+    },
+    {
+      "nome": "Ciclo 3 – Portuguesa Reconfortante",
+      "receitas": [
+        {
+          "id": "porco-alentejana-sem-ameijoas",
+          "titulo": "Carne de porco à alentejana (sem amêijoas)",
+          "ingredientes": [
+            "1 kg de carne de porco em cubos",
+            "2 batatas médias",
+            "2 dentes de alho",
+            "1 folha de louro",
+            "1 colher de sopa massa de pimentão",
+            "Azeite, sal"
+          ],
+          "passos": [
+            "Temperar a carne com alho, louro e massa de pimentão",
+            "Fritar a carne em azeite até dourar",
+            "Fritar as batatas em cubos à parte",
+            "Juntar batatas à carne e envolver tudo"
+          ]
+        },
+        {
+          "id": "frango-estufado-ervilhas",
+          "titulo": "Frango estufado com ervilhas e cenoura",
+          "ingredientes": [
+            "1 kg de frango em cubos",
+            "1 chávena de ervilhas",
+            "1 cenoura",
+            "1 cebola",
+            "Azeite, sal"
+          ],
+          "passos": [
+            "Refogar cebola em azeite",
+            "Juntar frango e dourar",
+            "Adicionar cenoura e água",
+            "Cozinhar 25 minutos e adicionar ervilhas"
+          ]
+        }
+      ]
+    },
+    {
+      "nome": "Ciclo 4 – Italiano",
+      "receitas": [
+        {
+          "id": "massa-porco-tomate",
+          "titulo": "Massa rústica com porco e tomate",
+          "ingredientes": [
+            "500 g de massa curta",
+            "800 g de porco em cubos pequenos",
+            "1 lata de tomate triturado",
+            "1 cebola",
+            "Azeite, sal, orégãos"
+          ],
+          "passos": [
+            "Cozer a massa e reservar",
+            "Saltear o porco em azeite",
+            "Adicionar cebola e tomate triturado",
+            "Misturar com a massa e envolver"
+          ]
+        },
+        {
+          "id": "almôndegas-peru-forno",
+          "titulo": "Almôndegas de peru no forno",
+          "ingredientes": [
+            "800 g de peru picado",
+            "1 ovo",
+            "2 colheres de sopa pão ralado",
+            "1 cebola pequena",
+            "Sal, pimenta"
+          ],
+          "passos": [
+            "Misturar todos os ingredientes",
+            "Formar almôndegas",
+            "Levar ao forno 200ºC por 25 minutos"
+          ]
+        }
+      ]
+    },
+    {
+      "nome": "Ciclo 5 – Mediterrânico & Legumes",
+      "receitas": [
+        {
+          "id": "lombo-porco-forno-legumes",
+          "titulo": "Lombo de porco no forno com legumes",
+          "ingredientes": [
+            "1 kg de lombo de porco",
+            "Batata-doce",
+            "Courgette",
+            "Cebola",
+            "Azeite, sal, pimenta"
+          ],
+          "passos": [
+            "Cortar tudo em pedaços grandes",
+            "Temperar com azeite e sal",
+            "Assar 50 minutos a 190ºC"
+          ]
+        },
+        {
+          "id": "frango-espinafres",
+          "titulo": "Frango salteado com espinafres",
+          "ingredientes": [
+            "1 kg de frango em cubos",
+            "200 g de espinafres",
+            "2 dentes de alho",
+            "Azeite, sal"
+          ],
+          "passos": [
+            "Saltear frango em azeite",
+            "Adicionar alho",
+            "Juntar espinafres e cozinhar até murcharem"
+          ]
+        }
+      ]
+    },
+    {
+      "nome": "Ciclo 6 – Tex-Mex",
+      "receitas": [
+        {
+          "id": "fajitas-porco",
+          "titulo": "Fajitas de porco",
+          "ingredientes": [
+            "1 kg de porco em tiras",
+            "1 pimento",
+            "1 cebola",
+            "Especiarias tex-mex",
+            "Azeite"
+          ],
+          "passos": [
+            "Saltear o porco em azeite",
+            "Adicionar legumes",
+            "Adicionar especiarias e envolver"
+          ]
+        },
+        {
+          "id": "chili-legumes",
+          "titulo": "Chili de feijão e legumes",
+          "ingredientes": [
+            "2 latas de feijão encarnado",
+            "1 lata de tomate triturado",
+            "1 cebola",
+            "1 cenoura",
+            "Paprika, azeite"
+          ],
+          "passos": [
+            "Refogar cebola e cenoura",
+            "Adicionar tomate e feijão",
+            "Cozinhar 20–25 minutos e envolver tudo"
+          ]
+        }
+      ]
+    }
+  ]
+}
