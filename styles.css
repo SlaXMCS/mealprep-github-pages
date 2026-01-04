@@ -1,0 +1,20 @@
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+h1, h2 {
+  font-family: 'Poppins', sans-serif;
+}
+
+#menusContainer pre, #comprasContainer pre {
+  background-color: #f0fdf4; /* verde suave */
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  white-space: pre-wrap;
+}
+
+#menusContainer h2, #comprasContainer h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
