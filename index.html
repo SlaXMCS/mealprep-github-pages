@@ -9,37 +9,67 @@
 <body>
 
 <header>
-  <h1>Meal Prep 4/2 Planner</h1>
+  <h1>🍴 Meal Prep 4/2 Planner</h1>
+  <p>Organiza os teus almoços do trabalho com menus rotativos e receitas detalhadas!</p>
 </header>
 
 <main>
+
+  <!-- MENU ROTATIVO -->
   <section class="menu">
-    <h2>Menu Rotativo</h2>
-    <label for="ciclo-select">Selecionar Ciclo:</label>
-    <select id="ciclo-select"></select>
-    <div id="menu-days"></div>
+    <h2>📅 Menu Rotativo</h2>
+    <div class="select-wrapper">
+      <label for="ciclo-select">Escolher Ciclo:</label>
+      <select id="ciclo-select"></select>
+    </div>
+    <div id="menu-days" class="menu-list">
+      <!-- Lista de receitas do ciclo -->
+    </div>
   </section>
 
+  <!-- RECEITAS -->
   <section class="recipes">
-    <h2>Receitas</h2>
-    <div id="recipes-list"></div>
+    <h2>🥘 Receitas</h2>
+    <div id="recipes-list" class="recipe-display">
+      <p>Seleciona uma receita no menu acima para ver os ingredientes e passos.</p>
+    </div>
   </section>
 
+  <!-- LISTA DE COMPRAS -->
   <section class="shopping">
-    <h2>Lista de Compras</h2>
-    <ul id="shopping-list"></ul>
+    <h2>🛒 Lista de Compras</h2>
+    <ul id="shopping-list">
+      <li>Seleciona um ciclo acima para gerar a lista automaticamente.</li>
+    </ul>
+    <button id="copy-shopping">📋 Copiar Lista</button>
   </section>
 
+  <!-- CHAT IA -->
   <section class="chat">
-    <h2>Chat IA</h2>
+    <h2>💬 Chat IA</h2>
     <div id="chat-box"></div>
     <div class="chat-input">
-      <input type="text" id="chat-input" placeholder="Pergunta à IA...">
+      <input type="text" id="chat-input" placeholder="Pergunta à IA sobre receitas, substituições ou dicas...">
       <button id="chat-send">Enviar</button>
     </div>
   </section>
+
 </main>
 
+<footer>
+  <p>Meal Prep Planner • Projeto Free • Feito para GitHub Pages</p>
+</footer>
+
 <script src="js/app.js"></script>
+<script>
+  // Botão de copiar lista de compras
+  document.getElementById('copy-shopping').addEventListener('click', () => {
+    const listItems = Array.from(document.querySelectorAll('#shopping-list li')).map(li=>li.textContent).join('\n');
+    navigator.clipboard.writeText(listItems).then(()=>{
+      alert('Lista de compras copiada para o clipboard!');
+    });
+  });
+</script>
+
 </body>
 </html>
