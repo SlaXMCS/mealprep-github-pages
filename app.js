@@ -4,8 +4,8 @@ const comprasContainer = document.getElementById('comprasContainer');
 const iaButton = document.getElementById('iaButton');
 const iaPergunta = document.getElementById('iaPergunta');
 const iaResposta = document.getElementById('iaResposta');
+const filterButtons = document.querySelectorAll('.filter-btn');
 
-// Base de receitas offline
 const receitasBase = {
   frango: [
     {nome:"Frango Salteado com Arroz", ingredientes:["Frango:200g","Arroz:100g","Cenoura:1","Courgette:1/2","Pimento:1/2"], passos:["Cozer arroz","Saltear frango","Saltear legumes","Misturar tudo","Servir"]},
@@ -25,11 +25,15 @@ const receitasBase = {
   ]
 };
 
+let menusGerados = [];
+
 function gerarMenus() {
   const proteinaInicial = document.getElementById('proteina').value;
   const evitar = document.getElementById('evitar').value.split(',').map(i=>i.trim().toLowerCase());
+
   menusContainer.innerHTML = '';
   comprasContainer.innerHTML = '';
+  menusGerados = [];
 
   const menus = [];
   const compras = {};
@@ -40,50 +44,68 @@ function gerarMenus() {
     const receitaLista = receitasBase[proteinaDia];
     const receita = receitaLista[Math.floor(Math.random()*receitaLista.length)];
 
-    menus.push({dia, receita});
+    menus.push({dia, proteina: proteinaDia, receita});
+    menusGerados.push({dia, proteina: proteinaDia, receita, done:false});
 
-    // Lista de compras agregada
-    receita.ingredientes.forEach(ing => {
+    // Lista de compras
+    receita.ingredientes.forEach(ing=>{
       const [nome, quant] = ing.split(':');
       if(!compras[nome]) compras[nome] = quant;
     });
   }
 
-  // Mostrar menus em cards
-  menus.forEach(menu=>{
+  mostrarMenus(menusGerados);
+  comprasContainer.innerHTML = `<h2 class="text-2xl font-semibold mb-2">Lista de Compras Agregada</h2><pre>${Object.entries(compras).map(([i,q])=>`${i}: ${q}`).join('\n')}</pre>`;
+}
+
+function mostrarMenus(menus) {
+  menusContainer.innerHTML = '';
+  menus.forEach((menu, index)=>{
     const card = document.createElement('div');
     card.classList.add('menu-card');
+    if(menu.done) card.classList.add('done');
+    card.dataset.proteina = menu.proteina;
 
     card.innerHTML = `<h3 class="font-bold text-lg mb-2">Dia ${menu.dia}: ${menu.receita.nome}</h3>
+                      <strong>Proteína:</strong> ${menu.proteina}<br>
                       <strong>Ingredientes:</strong>
                       <pre>${menu.receita.ingredientes.join('\n')}</pre>
                       <strong>Passos:</strong>
                       <pre>${menu.receita.passos.map((p,i)=>`${i+1}. ${p}`).join('\n')}</pre>`;
+
+    card.addEventListener('click', ()=>{
+      menusGerados[index].done = !menusGerados[index].done;
+      mostrarMenus(menusGerados);
+    });
+
     menusContainer.appendChild(card);
   });
-
-  // Mostrar lista de compras
-  comprasContainer.innerHTML = `<h2 class="text-2xl font-semibold mb-2">Lista de Compras Agregada</h2><pre>${Object.entries(compras).map(([i,q])=>`${i}: ${q}`).join('\n')}</pre>`;
 }
 
-// Assistente Offline avançado
+// Filtros
+filterButtons.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    filterButtons.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const filtro = btn.dataset.proteina;
+    const filtrados = filtro === 'todas' ? menusGerados : menusGerados.filter(m=>m.proteina===filtro);
+    mostrarMenus(filtrados);
+  });
+});
+
+// Assistente offline
 function perguntarIA() {
   const pergunta = iaPergunta.value.toLowerCase();
   if(!pergunta) return;
 
   let resposta = "Desculpa, não sei responder a isso. Sugiro ajustar os ingredientes conforme preferência.";
-
-  const palavrasChave = ["substituir", "alternativa", "trocar"];
-  const conservacao = ["conservação", "guardar", "armazenamento"];
-  const tempo = ["tempo", "preparação", "duração"];
-
-  if(palavrasChave.some(p=>pergunta.includes(p))){
-    resposta = "Para substituir proteínas, pode usar frango, porco, vaca, ovos ou leguminosas, dependendo da receita.";
-  } else if(conservacao.some(p=>pergunta.includes(p))){
+  if(["substituir","alternativa","trocar"].some(p=>pergunta.includes(p))){
+    resposta = "Para substituir proteínas, pode usar frango, porco, vaca, ovos ou leguminosas.";
+  } else if(["conservação","guardar","armazenamento"].some(p=>pergunta.includes(p))){
     resposta = "As refeições podem ser guardadas no frigorífico até 3 dias e aquecidas no micro-ondas antes de consumir.";
-  } else if(tempo.some(p=>pergunta.includes(p))){
+  } else if(["tempo","preparação","duração"].some(p=>pergunta.includes(p))){
     resposta = "A preparação média de cada receita é entre 20 a 40 minutos, dependendo da proteína.";
-
   }
 
   iaResposta.textContent = resposta;
