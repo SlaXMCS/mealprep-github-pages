@@ -9,7 +9,7 @@ const filterButtons = document.querySelectorAll('.filter-btn');
 const receitasBase = {
   frango: [
     {nome:"Frango Salteado com Arroz", ingredientes:["Frango:200g","Arroz:100g","Cenoura:1","Courgette:1/2","Pimento:1/2"], passos:["Cozer arroz","Saltear frango","Saltear legumes","Misturar tudo","Servir"]},
-    {nome:"Frango Assado com Batata", ingredientes:["Frango:200g","Batata:150g","Alho:2 dentes","Azeite:1c.sopa"], passos:["Temperar frango","Assar com batata","Servir"]}
+    {nome:"Frango Assado com Batata", ingredientes:["Frango:200g","Batata:150g","Alho:2","Azeite:1c.sopa"], passos:["Temperar frango","Assar com batata","Servir"]}
   ],
   porco: [
     {nome:"Lombo de Porco Grelhado", ingredientes:["Porco:200g","Arroz:100g","Brócolos:100g"], passos:["Temperar lombo","Grelhar lombo","Cozinhar arroz","Saltear brócolos","Servir"]}
@@ -27,103 +27,116 @@ const receitasBase = {
 
 let menusGerados = [];
 
-function gerarMenus() {
-  const proteinaInicial = document.getElementById('proteina').value;
-  const evitar = document.getElementById('evitar').value.split(',').map(i=>i.trim().toLowerCase()).filter(i=>i);
-  
+function gerarMenus(){
+  const proteinaEscolhida = document.getElementById('proteina').value;
+  const evitar = document.getElementById('evitar').value.toLowerCase().split(',').map(i=>i.trim()).filter(i=>i);
+
   menusContainer.innerHTML = '';
   comprasContainer.innerHTML = '';
-  menusGerados = [];
+
+  const proteinasDisponiveis = Object.keys(receitasBase).filter(p => !evitar.includes(p));
+  if(proteinasDisponiveis.length === 0){
+    menusContainer.innerHTML = "<p class='text-red-600 font-bold'>Erro: todas as proteínas estão a ser evitadas!</p>";
+    return;
+  }
 
   const menus = [];
   const compras = {};
 
-  // Proteínas disponíveis, depois de aplicar os filtros
-  const proteinasDisponiveis = Object.keys(receitasBase).filter(p => !evitar.includes(p));
-  
-  if(proteinasDisponiveis.length === 0){
-    menusContainer.innerHTML = "<p class='text-red-600 font-bold'>Erro: todas as proteínas estão a ser evitadas. Ajusta os filtros.</p>";
-    return;
-  }
-
   for(let dia=1; dia<=6; dia++){
-    const proteinaDia = proteinasDisponiveis[(dia-1) % proteinasDisponiveis.length];
-    const receitaLista = receitasBase[proteinaDia];
+    const proteinaDia = proteinasDisponiveis[(dia-1)%proteinasDisponiveis.length];
+    const listaReceitas = receitasBase[proteinaDia];
+    if(!listaReceitas || listaReceitas.length===0) continue;
 
-    if(!receitaLista || receitaLista.length === 0){
-      menus.push({dia, proteina: proteinaDia, receita:{nome:"Erro a gerar receita", ingredientes:[], passos:[]}});
-      continue;
-    }
+    const receita = listaReceitas[Math.floor(Math.random()*listaReceitas.length)];
+    menus.push({dia, proteina:proteinaDia, receita});
+    menusGerados.push({dia, proteina:proteinaDia, receita, done:false});
 
-    const receita = receitaLista[Math.floor(Math.random()*receitaLista.length)];
-
-    menus.push({dia, proteina: proteinaDia, receita});
-    menusGerados.push({dia, proteina: proteinaDia, receita, done:false});
-
-    // Lista de compras
     receita.ingredientes.forEach(ing=>{
       const [nome, quant] = ing.split(':');
       if(!nome) return;
-      if(!compras[nome]) compras[nome] = quant;
+      if(!compras[nome]) compras[nome]=quant;
     });
   }
 
-  mostrarMenus(menusGerados);
-  comprasContainer.innerHTML = `<h2 class="text-2xl font-semibold mb-2">Lista de Compras Agregada</h2><pre>${Object.entries(compras).map(([i,q])=>`${i}: ${q}`).join('\n')}</pre>`;
-}
-
-function mostrarMenus(menus) {
-  menusContainer.innerHTML = '';
-  menus.forEach((menu, index)=>{
+  menus.forEach(menu=>{
     const card = document.createElement('div');
     card.classList.add('menu-card');
-    if(menu.done) card.classList.add('done');
-    card.dataset.proteina = menu.proteina;
-
     card.innerHTML = `<h3 class="font-bold text-lg mb-2">Dia ${menu.dia}: ${menu.receita.nome}</h3>
                       <strong>Proteína:</strong> ${menu.proteina}<br>
-                      <strong>Ingredientes:</strong>
-                      <pre>${menu.receita.ingredientes.join('\n')}</pre>
-                      <strong>Passos:</strong>
-                      <pre>${menu.receita.passos.map((p,i)=>`${i+1}. ${p}`).join('\n')}</pre>`;
-
+                      <strong>Ingredientes:</strong><pre>${menu.receita.ingredientes.join('\n')}</pre>
+                      <strong>Passos:</strong><pre>${menu.receita.passos.map((p,i)=>`${i+1}. ${p}`).join('\n')}</pre>`;
     card.addEventListener('click', ()=>{
-      menusGerados[index].done = !menusGerados[index].done;
-      mostrarMenus(menusGerados);
+      menu.done = !menu.done;
+      card.classList.toggle('done');
     });
-
     menusContainer.appendChild(card);
   });
+
+  comprasContainer.innerHTML = `<h2 class="text-2xl font-semibold mb-2">Lista de Compras</h2><pre>${Object.entries(compras).map(([i,q])=>`${i}: ${q}`).join('\n')}</pre>`;
 }
 
-// Filtros
-filterButtons.forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    filterButtons.forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
+// Assistente / Calculadora de proporções
+function perguntarIA(){
+  const input = iaPergunta.value.toLowerCase().trim();
+  let resposta = "Não entendi. Tenta 'dobrar receita' ou 'para 3 pessoas'.";
 
-    const filtro = btn.dataset.proteina;
-    const filtrados = filtro === 'todas' ? menusGerados : menusGerados.filter(m=>m.proteina===filtro);
-    mostrarMenus(filtrados);
-  });
-});
-
-// Assistente offline
-function perguntarIA() {
-  const pergunta = iaPergunta.value.toLowerCase();
-  if(!pergunta) return;
-
-  let resposta = "Desculpa, não sei responder a isso. Sugiro ajustar os ingredientes conforme preferência.";
-  if(["substituir","alternativa","trocar"].some(p=>pergunta.includes(p))){
-    resposta = "Para substituir proteínas, pode usar frango, porco, vaca, ovos ou leguminosas.";
-  } else if(["conservação","guardar","armazenamento"].some(p=>pergunta.includes(p))){
-    resposta = "As refeições podem ser guardadas no frigorífico até 3 dias e aquecidas no micro-ondas antes de consumir.";
-  } else if(["tempo","preparação","duração"].some(p=>pergunta.includes(p))){
-    resposta = "A preparação média de cada receita é entre 20 a 40 minutos, dependendo da proteína.";
+  const match = input.match(/(\d+)\s*(porções|pessoas)/);
+  if(match){
+    const fator = parseInt(match[1]);
+    if(!menusGerados.length){
+      resposta = "Primeiro gera os menus para ajustar a receita!";
+    } else {
+      const receita = menusGerados[0].receita;
+      const ingAjustados = receita.ingredientes.map(ing=>{
+        const [nome, quant] = ing.split(':');
+        let valor = parseFloat(quant);
+        if(isNaN(valor)) return ing;
+        let unidade = quant.replace(/[0-9.]/g,'');
+        valor = valor*fator;
+        return `${nome}: ${valor}${unidade}`;
+      });
+      resposta = `Receita ajustada para ${fator} porções:\n` + ingAjustados.join('\n');
+    }
+  } else if(input.includes("dobrar")){
+    if(!menusGerados.length){
+      resposta = "Primeiro gera os menus!";
+    } else {
+      const receita = menusGerados[0].receita;
+      const ingAjustados = receita.ingredientes.map(ing=>{
+        const [nome, quant] = ing.split(':');
+        let valor = parseFloat(quant);
+        if(isNaN(valor)) return ing;
+        let unidade = quant.replace(/[0-9.]/g,'');
+        valor*=2;
+        return `${nome}: ${valor}${unidade}`;
+      });
+      resposta = `Receita dobrada:\n` + ingAjustados.join('\n');
+    }
   }
 
   iaResposta.textContent = resposta;
 }
 
+// Event listeners
 gerarMenusButton.addEventListener('click', gerarMenus);
 iaButton.addEventListener('click', perguntarIA);
+filterButtons.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    filterButtons.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const filtro = btn.dataset.proteina;
+    const filtrados = filtro==='todas'?menusGerados:menusGerados.filter(m=>m.proteina===filtro);
+    menusContainer.innerHTML = '';
+    filtrados.forEach(menu=>{
+      const card = document.createElement('div');
+      card.classList.add('menu-card');
+      if(menu.done) card.classList.add('done');
+      card.innerHTML = `<h3 class="font-bold text-lg mb-2">Dia ${menu.dia}: ${menu.receita.nome}</h3>
+                        <strong>Proteína:</strong> ${menu.proteina}<br>
+                        <strong>Ingredientes:</strong><pre>${menu.receita.ingredientes.join('\n')}</pre>
+                        <strong>Passos:</strong><pre>${menu.receita.passos.map((p,i)=>`${i+1}. ${p}`).join('\n')}</pre>`;
+      menusContainer.appendChild(card);
+    });
+  });
+});
