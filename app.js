@@ -29,8 +29,8 @@ let menusGerados = [];
 
 function gerarMenus() {
   const proteinaInicial = document.getElementById('proteina').value;
-  const evitar = document.getElementById('evitar').value.split(',').map(i=>i.trim().toLowerCase());
-
+  const evitar = document.getElementById('evitar').value.split(',').map(i=>i.trim().toLowerCase()).filter(i=>i);
+  
   menusContainer.innerHTML = '';
   comprasContainer.innerHTML = '';
   menusGerados = [];
@@ -38,10 +38,23 @@ function gerarMenus() {
   const menus = [];
   const compras = {};
 
+  // Proteínas disponíveis, depois de aplicar os filtros
+  const proteinasDisponiveis = Object.keys(receitasBase).filter(p => !evitar.includes(p));
+  
+  if(proteinasDisponiveis.length === 0){
+    menusContainer.innerHTML = "<p class='text-red-600 font-bold'>Erro: todas as proteínas estão a ser evitadas. Ajusta os filtros.</p>";
+    return;
+  }
+
   for(let dia=1; dia<=6; dia++){
-    const proteinasDisponiveis = Object.keys(receitasBase).filter(p => !evitar.includes(p));
     const proteinaDia = proteinasDisponiveis[(dia-1) % proteinasDisponiveis.length];
     const receitaLista = receitasBase[proteinaDia];
+
+    if(!receitaLista || receitaLista.length === 0){
+      menus.push({dia, proteina: proteinaDia, receita:{nome:"Erro a gerar receita", ingredientes:[], passos:[]}});
+      continue;
+    }
+
     const receita = receitaLista[Math.floor(Math.random()*receitaLista.length)];
 
     menus.push({dia, proteina: proteinaDia, receita});
@@ -50,6 +63,7 @@ function gerarMenus() {
     // Lista de compras
     receita.ingredientes.forEach(ing=>{
       const [nome, quant] = ing.split(':');
+      if(!nome) return;
       if(!compras[nome]) compras[nome] = quant;
     });
   }
