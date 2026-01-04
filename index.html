@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meal Prep IA - Ciclo 6 dias</title>
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+<div id="root" class="container mx-auto p-6"></div>
+
+<script type="text/babel">
+
+function App() {
+  const [proteina, setProteina] = React.useState('frango');
+  const [evitar, setEvitar] = React.useState('');
+  const [menus, setMenus] = React.useState([]);
+  const [listaCompras, setListaCompras] = React.useState([]);
+  const [iaPergunta, setIaPergunta] = React.useState('');
+  const [iaResposta, setIaResposta] = React.useState('');
+
+  const gerarMenus = () => {
+    // Mock simples de 6 dias com variação de proteína
+    const proteinasDisponiveis = ["frango","porco","vaca","ovos","leguminosas"].filter(p => p !== proteina ? true : true);
+    const evitarArr = evitar.split(',').map(i => i.trim().toLowerCase());
+    const menuCiclo = [];
+
+    for(let dia=1; dia<=6; dia++){
+      const proteinaDia = proteinasDisponiveis[dia % proteinasDisponiveis.length];
+      const receita = `Dia ${dia}:\n${proteinaDia.charAt(0).toUpperCase()+proteinaDia.slice(1)} Salteado com Arroz e Legumes\n- ${proteinaDia}: 200g\n- Arroz: 100g\n- Cenoura: 1\n- Courgette: 1/2\n- Pimento: 1/2\n- Sal e pimenta: a gosto\n\nPassos:\n1. Cozer arroz\n2. Saltear ${proteinaDia}\n3. Saltear legumes\n4. Misturar tudo\n5. Servir`;
+      menuCiclo.push({dia, receita});
+    }
+    setMenus(menuCiclo);
+
+    // Lista de compras agregada
+    const compras = {};
+    menuCiclo.forEach(menu=>{
+      menu.receita.split('\n').forEach(linha=>{
+        if(linha.includes(':')){
+          const [ingrediente, quant] = linha.split(':');
+          const cat = ["frango","porco","vaca","ovos","leguminosas"].includes(ingrediente.toLowerCase()) ? "Carnes/Proteínas" :
+                      ["arroz","massa","couscous"].includes(ingrediente.toLowerCase()) ? "Secos" :
+                      "Legumes/Outros";
+          if(!compras[cat]) compras[cat] = [];
+          compras[cat].push(`${ingrediente.trim()}: ${quant.trim()}`);
+        }
+      })
+    });
+    // Agregar quantidades (simples mock, apenas juntar linhas iguais)
+    const listaFinal = {};
+    for(const cat in compras){
+      listaFinal[cat] = [...new Set(compras[cat])];
+    }
+    setListaCompras(listaFinal);
+  }
+
+  const perguntarIA = () => {
+    // Mock do assistente IA
+    if(!iaPergunta) return;
+    setIaResposta(`Resposta simulada à pergunta: "${iaPergunta}".\nSugestão: ajusta os ingredientes conforme tua preferência.`);
+  }
+
+  return (
+    <div>
+      <h1 className="text-3xl font-bold mb-6 text-center">Meal Prep IA - Ciclo 6 dias</h1>
+
+      <div className="bg-white p-4 rounded shadow mb-6">
+        <label className="block mb-2">Proteína inicial preferida:
+          <select value={proteina} onChange={e => setProteina(e.target.value)} className="border rounded px-2 py-1 w-full">
+            <option value="frango">Frango</option>
+            <option value="porco">Porco</option>
+            <option value="vaca">Vaca</option>
+            <option value="ovos">Ovos</option>
+            <option value="leguminosas">Leguminosas</option>
+          </select>
+        </label>
+        <label className="block mb-2">Evitar ingredientes (vírgula separado):
+          <input value={evitar} onChange={e => setEvitar(e.target.value)} type="text" className="border rounded px-2 py-1 w-full" placeholder="Ex: peixe, marisco"/>
+        </label>
+        <button onClick={gerarMenus} className="bg-green-500 text-white px-4 py-2 rounded mt-2 w-full">Gerar Menus 6 dias</button>
+      </div>
+
+      <div className="bg-white p-4 rounded shadow mb-6">
+        <h2 className="text-xl font-semibold mb-2">Menus Gerados</h2>
+        {menus.map(menu => (
+          <pre key={menu.dia} className="whitespace-pre-wrap mb-2 bg-gray-50 p-2 rounded">{menu.receita}</pre>
+        ))}
+      </div>
+
+      <div className="bg-white p-4 rounded shadow mb-6">
+        <h2 className="text-xl font-semibold mb-2">Lista de Compras Agregada</h2>
+        {Object.keys(listaCompras).map(cat=>(
+          <div key={cat} className="mb-2">
+            <strong>{cat}:</strong>
+            <pre className="whitespace-pre-wrap">{listaCompras[cat].join('\n')}</pre>
+          </div>
+        ))}
+      </div>
+
+      <div className="bg-white p-4 rounded shadow mb-6">
+        <h2 className="text-xl font-semibold mb-2">Assistente IA</h2>
+        <input type="text" value={iaPergunta} onChange={e => setIaPergunta(e.target.value)} placeholder="Pergunta à IA..." className="border rounded px-2 py-1 w-full mb-2"/>
+        <button onClick={perguntarIA} className="bg-blue-500 text-white px-4 py-2 rounded w-full mb-2">Perguntar</button>
+        <pre className="whitespace-pre-wrap">{iaResposta}</pre>
+      </div>
+
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+
+</script>
+
+</body>
+</html>
